@@ -4,6 +4,8 @@ All notable changes to `darvis/laravel-document-sign` are documented here. The f
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-18
+
 First public release of the package: a DocuSign like signing flow for PDF documents in Laravel, with mailed invitations, a signing page with a signature canvas, stamping through FPDI, an audit trail and an optional portal.
 
 ### Added
