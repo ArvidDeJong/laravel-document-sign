@@ -6,7 +6,7 @@ body:
     id: problem
     attributes:
       label: What problem would this solve?
-      description: Describe the situation, for example a mail flow or Mailtrap event that is not handled yet.
+      description: Describe the situation, for example a signing scenario or a portal task that the package does not cover yet.
     validations:
       required: true
   - type: textarea
