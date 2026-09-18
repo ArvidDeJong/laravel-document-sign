@@ -3,12 +3,13 @@
 namespace Darvis\Signer\Facades;
 
 use Darvis\Signer\Services\DocumentBuilder;
+use Darvis\Signer\Services\SignerManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static DocumentBuilder document(string $pdfPath)
  *
- * @see \Darvis\Signer\Services\SignerManager
+ * @see SignerManager
  */
 class Signer extends Facade
 {

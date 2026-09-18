@@ -6,10 +6,14 @@ use Darvis\Signer\SignerServiceProvider;
 use Darvis\Signer\Tests\Fixtures\User;
 use FPDF;
 use Illuminate\Support\Facades\Hash;
+use Orchestra\Testbench\Concerns\WithLaravelMigrations;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
+    // The portal logs in against the host app's users table, which Laravel's own migrations create.
+    use WithLaravelMigrations;
+
     protected function getPackageProviders($app): array
     {
         return [SignerServiceProvider::class];
@@ -22,19 +26,16 @@ abstract class TestCase extends Orchestra
         $app['config']->set('database.connections.testing', [
             'driver' => 'sqlite',
             'database' => ':memory:',
+            // The cascades and null-on-delete rules in the migrations only work with this on.
+            'foreign_key_constraints' => true,
         ]);
         $app['config']->set('auth.providers.users.model', User::class);
-    }
-
-    protected function defineDatabaseMigrations(): void
-    {
-        $this->loadLaravelMigrations();
     }
 
     /**
      * Create a portal admin user with the given password.
      */
-    protected function createAdminUser(string $password = 'secret-password'): User
+    public function createAdminUser(string $password = 'secret-password'): User
     {
         return User::create([
             'name' => 'Admin',
@@ -46,9 +47,9 @@ abstract class TestCase extends Orchestra
     /**
      * Generate a simple two page PDF and return its temporary file path.
      */
-    protected function createSamplePdf(): string
+    public function createSamplePdf(): string
     {
-        $pdf = new FPDF();
+        $pdf = new FPDF;
 
         foreach ([1, 2] as $page) {
             $pdf->AddPage();
@@ -65,7 +66,7 @@ abstract class TestCase extends Orchestra
     /**
      * A tiny valid PNG as a base64 data URL, like the signature pad submits.
      */
-    protected function signatureDataUrl(): string
+    public function signatureDataUrl(): string
     {
         $image = imagecreatetruecolor(120, 40);
         imagefill($image, 0, 0, imagecolorallocate($image, 255, 255, 255));

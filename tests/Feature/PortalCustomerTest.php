@@ -2,6 +2,7 @@
 
 use Darvis\Signer\Models\Contact;
 use Darvis\Signer\Models\Customer;
+use Darvis\Signer\Models\Document;
 
 beforeEach(function () {
     $this->actingAs($this->createAdminUser());
@@ -66,7 +67,7 @@ it('adds and removes a contact', function () {
 it('keeps documents when their customer is deleted', function () {
     $customer = Customer::create(['name' => 'Alice']);
 
-    $document = \Darvis\Signer\Models\Document::create([
+    $document = Document::create([
         'customer_id' => $customer->id,
         'title' => 'Contract',
         'original_path' => 'signer/originals/test.pdf',

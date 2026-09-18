@@ -5,6 +5,7 @@ namespace Darvis\Signer\Http\Controllers\Portal;
 use Darvis\Signer\Models\Customer;
 use Darvis\Signer\Models\Document;
 use Darvis\Signer\Services\SignerManager;
+use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -14,6 +15,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends Controller
 {
+    public function __construct(
+        protected SignerConfig $config,
+    ) {}
+
     public function index(): View
     {
         return view('signer::portal.documents.index', [
@@ -44,7 +49,7 @@ class DocumentController extends Controller
 
         $builder = $manager->document($request->file('pdf')->getRealPath())
             ->title($validated['title'])
-            ->forCustomer(Customer::find($validated['customer_id'] ?? null));
+            ->forCustomer(isset($validated['customer_id']) ? Customer::query()->find((int) $validated['customer_id']) : null);
 
         foreach ($validated['signers'] as $signer) {
             $builder->addSigner(
@@ -76,12 +81,12 @@ class DocumentController extends Controller
 
         abort_if($path === null, 404);
 
-        return Storage::disk(config('signer.disk'))->download($path, $document->title.'.pdf');
+        return Storage::disk($this->config->disk())->download($path, $document->title.'.pdf');
     }
 
     public function destroy(Document $document): RedirectResponse
     {
-        $disk = Storage::disk(config('signer.disk'));
+        $disk = Storage::disk($this->config->disk());
 
         $paths = array_filter([
             $document->original_path,

@@ -54,7 +54,8 @@ it('requires at least one signer', function () {
 it('rejects a non pdf upload', function () {
     $this->post(route('signer.portal.documents.store'), [
         'title' => 'Contract',
-        'pdf' => UploadedFile::fake()->createWithContent('contract.pdf', 'plain text'),
+        // A fake upload reports the mime type of its name, so the name must be non pdf too.
+        'pdf' => UploadedFile::fake()->create('contract.txt', 1, 'text/plain'),
         'signers' => [
             ['name' => 'Alice', 'email' => 'alice@example.com', 'page' => 1, 'x' => 10, 'y' => 80],
         ],
