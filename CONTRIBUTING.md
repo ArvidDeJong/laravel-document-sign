@@ -30,6 +30,7 @@ CI runs the tests on PHP 8.2 to 8.4 with Laravel 11, 12 and 13, on the lowest an
 - No Doctrine DBAL and no driver-specific SQL: use the native schema builder, because host apps run their tests on SQLite.
 - Write code, comments, messages and docs in English. Texts for end users go through `__()`, with a key in `lang/nl.json` for every new string.
 - Update `docs/`, `CHANGELOG.md` (under `Unreleased`) and `resources/boost/` when users will notice the change.
+- The documentation in `docs/` is also the website. Don't write `{{ }}` or `{% %}` in code examples; Jekyll would render it.
 
 ## Code of conduct
 

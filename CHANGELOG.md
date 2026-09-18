@@ -15,6 +15,7 @@ First public release of the package: a DocuSign like signing flow for PDF docume
 - Dutch translation of the portal and the signing page.
 - `Darvis\Signer\Support\SignerConfig` as the single reader of the package config.
 - Laravel Boost guideline in `resources/boost/guidelines/core.blade.php`, Pint, Larastan level 8 and the shared CI workflow on PHP 8.2 to 8.4 with Laravel 11, 12 and 13.
+- Documentation site at https://arviddejong.github.io/laravel-document-sign/, built from `docs/`; the README holds the quick start and links there.
 
 ### Changed
 

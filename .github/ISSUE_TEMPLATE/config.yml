@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/ArvidDeJong/laravel-document-sign/security/advisories/new
     about: Report a vulnerability privately.
   - name: Documentation
-    url: https://github.com/ArvidDeJong/laravel-document-sign#readme
+    url: https://arviddejong.github.io/laravel-document-sign/
     about: Installation, the signing flow, the portal and configuration.
