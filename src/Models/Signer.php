@@ -6,8 +6,26 @@ use Darvis\Signer\Enums\SignerStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
+/**
+ * @property int $id
+ * @property string $uuid
+ * @property int $document_id
+ * @property string $name
+ * @property string $email
+ * @property SignerStatus $status
+ * @property int $page
+ * @property float $x
+ * @property float $y
+ * @property float|null $width
+ * @property string|null $signature_path
+ * @property Carbon|null $signed_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Document $document
+ */
 class Signer extends Model
 {
     use Notifiable;
@@ -16,6 +34,9 @@ class Signer extends Model
 
     protected $guarded = [];
 
+    /**
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -35,6 +56,9 @@ class Signer extends Model
         });
     }
 
+    /**
+     * @return BelongsTo<Document, $this>
+     */
     public function document(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'document_id');

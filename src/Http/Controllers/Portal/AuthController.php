@@ -2,6 +2,7 @@
 
 namespace Darvis\Signer\Http\Controllers\Portal;
 
+use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,9 +12,13 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        protected SignerConfig $config,
+    ) {}
+
     public function create(): View|RedirectResponse
     {
-        if (Auth::guard(config('signer.portal.guard'))->check()) {
+        if (Auth::guard($this->config->portalGuard())->check()) {
             return redirect()->route('signer.portal.dashboard');
         }
 
@@ -27,7 +32,7 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $guard = Auth::guard(config('signer.portal.guard'));
+        $guard = Auth::guard($this->config->portalGuard());
 
         if (! $guard->attempt($credentials, $request->boolean('remember'))) {
             throw ValidationException::withMessages([
@@ -42,7 +47,7 @@ class AuthController extends Controller
 
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard(config('signer.portal.guard'))->logout();
+        Auth::guard($this->config->portalGuard())->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

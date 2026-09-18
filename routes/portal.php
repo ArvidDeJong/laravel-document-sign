@@ -6,10 +6,13 @@ use Darvis\Signer\Http\Controllers\Portal\CustomerController;
 use Darvis\Signer\Http\Controllers\Portal\DashboardController;
 use Darvis\Signer\Http\Controllers\Portal\DocumentController;
 use Darvis\Signer\Http\Middleware\AuthenticatePortal;
+use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix(config('signer.portal.prefix'))
-    ->middleware(config('signer.portal.middleware'))
+$config = app(SignerConfig::class);
+
+Route::prefix($config->portalPrefix())
+    ->middleware($config->portalMiddleware())
     ->name('signer.portal.')
     ->group(function () {
         Route::get('login', [AuthController::class, 'create'])->name('login');

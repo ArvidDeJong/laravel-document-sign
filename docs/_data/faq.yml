@@ -1,0 +1,31 @@
+# Questions as people ask them to an assistant. Short, factual answers, checked against the docs.
+# Rendered on faq.md, in the FAQPage structured data and in llms.txt.
+- q: How do I let people sign a PDF in a Laravel application?
+  a: Install `darvis/laravel-document-sign`, run the migrations and call `Signer::document($path)->addSigner($name, $email)->send()`. Every signer gets a mail with a signing link, draws a signature on the signing page, and the package stamps all signatures on the PDF once everyone has signed.
+
+- q: Is darvis/laravel-document-sign a DocuSign alternative?
+  a: It offers a DocuSign like flow inside your own Laravel application, with the documents on your own storage. It is an independent open-source package under the MIT license and not affiliated with DocuSign. It does not provide qualified electronic signatures.
+
+- q: How long does a signing link stay valid?
+  a: For `link_expires_after_hours` hours after it was sent, 72 by default. The link is a temporary signed URL, so an expired or tampered link answers with a 403.
+
+- q: How do I position a signature on the page?
+  a: With `page`, `x` and `y` on `addSigner()`, as percentages of the page measured from the top left, plus an optional `width` in percent of the page width. The same numbers work on any paper size.
+
+- q: What happens when the last signer has signed?
+  a: The package stamps every captured signature on the original PDF with FPDI, stores the result as `signed_path` on the configured disk, sets the document status to Completed and dispatches the `DocumentCompleted` event.
+
+- q: Where are the documents and signatures stored?
+  a: On the filesystem disk from `config/signer.php` (`SIGNER_DISK`, `local` by default) under `storage_path` (`signer`), in the folders `originals`, `signatures` and `signed`.
+
+- q: Does the package come with a user interface?
+  a: Yes. A signing page for signers, and an optional portal with login, dashboard, customers and document management under `/portal`. Set `SIGNER_PORTAL_ENABLED=false` to use the signing flow without the portal.
+
+- q: Who can log in to the portal?
+  a: Any user of the host application, authenticated against the guard in `signer.portal.guard` (`web` by default). Create a user in your application's users table to get started.
+
+- q: Is there an audit trail?
+  a: Every step is recorded in `signer_audit_events` with the IP address and user agent where available, as `document_created`, `invitation_sent`, `document_signed` and `document_completed`.
+
+- q: Which PHP and Laravel versions are supported?
+  a: PHP 8.2 or higher with the GD extension, and Laravel 11, 12 and 13.

@@ -7,6 +7,7 @@ use Darvis\Signer\Enums\SignerStatus;
 use Darvis\Signer\Events\DocumentCompleted;
 use Darvis\Signer\Events\SignerSigned;
 use Darvis\Signer\Models\Signer;
+use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
@@ -16,6 +17,7 @@ class SignatureProcessor
     public function __construct(
         protected AuditLogger $auditLogger,
         protected SignatureStamper $stamper,
+        protected SignerConfig $config,
     ) {}
 
     /**
@@ -67,8 +69,8 @@ class SignatureProcessor
             throw new InvalidArgumentException('Signature data URL contains invalid base64 data.');
         }
 
-        $path = config('signer.storage_path').'/signatures/'.$signer->uuid.'.png';
-        Storage::disk(config('signer.disk'))->put($path, $contents);
+        $path = $this->config->storagePath().'/signatures/'.$signer->uuid.'.png';
+        Storage::disk($this->config->disk())->put($path, $contents);
 
         return $path;
     }

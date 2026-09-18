@@ -4,6 +4,7 @@ namespace Darvis\Signer\Http\Controllers;
 
 use Darvis\Signer\Models\Signer;
 use Darvis\Signer\Services\SignatureProcessor;
+use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -28,9 +29,9 @@ class SignController extends Controller
     /**
      * Stream the original PDF so the signing page can display it.
      */
-    public function pdf(Signer $signer): StreamedResponse
+    public function pdf(Signer $signer, SignerConfig $config): StreamedResponse
     {
-        return Storage::disk(config('signer.disk'))->response(
+        return Storage::disk($config->disk())->response(
             $signer->document->original_path,
             $signer->document->title.'.pdf',
             ['Content-Type' => 'application/pdf'],

@@ -1,10 +1,13 @@
 <?php
 
 use Darvis\Signer\Http\Controllers\SignController;
+use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix(config('signer.route_prefix'))
-    ->middleware(config('signer.route_middleware'))
+$config = app(SignerConfig::class);
+
+Route::prefix($config->routePrefix())
+    ->middleware($config->routeMiddleware())
     ->group(function () {
         Route::get('{signer:uuid}', [SignController::class, 'show'])
             ->middleware('signed')

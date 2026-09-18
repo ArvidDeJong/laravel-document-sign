@@ -4,17 +4,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Signature stamp
+    |--------------------------------------------------------------------------
+    |
+    | Default width of a placed signature in percent of the page width. The
+    | height follows from the aspect ratio of the captured signature image.
+    |
+    */
+
+    'default_signature_width' => 20.0,
+
+    /*
+    |--------------------------------------------------------------------------
     | Storage
     |--------------------------------------------------------------------------
     |
-    | The filesystem disk and base path used to store original documents,
-    | captured signature images and the final signed PDF files.
+    | The filesystem disk and base path (see `storage_path` below) used to
+    | store original documents, captured signature images and the final
+    | signed PDF files.
     |
     */
 
     'disk' => env('SIGNER_DISK', 'local'),
-
-    'storage_path' => env('SIGNER_STORAGE_PATH', 'signer'),
 
     /*
     |--------------------------------------------------------------------------
@@ -30,19 +41,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Routes
-    |--------------------------------------------------------------------------
-    |
-    | Prefix and middleware for the signing routes that the package registers.
-    |
-    */
-
-    'route_prefix' => 'sign',
-
-    'route_middleware' => ['web'],
-
-    /*
-    |--------------------------------------------------------------------------
     | Portal
     |--------------------------------------------------------------------------
     |
@@ -55,21 +53,33 @@ return [
 
     'portal' => [
         'enabled' => env('SIGNER_PORTAL_ENABLED', true),
-        'prefix' => 'portal',
-        'middleware' => ['web'],
         'guard' => 'web',
+        'middleware' => ['web'],
+        'prefix' => 'portal',
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Signature stamp
+    | Routes
     |--------------------------------------------------------------------------
     |
-    | Default width of a placed signature in percent of the page width. The
-    | height follows from the aspect ratio of the captured signature image.
+    | Prefix and middleware for the signing routes that the package registers.
     |
     */
 
-    'default_signature_width' => 20.0,
+    'route_middleware' => ['web'],
+
+    'route_prefix' => 'sign',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Storage path
+    |--------------------------------------------------------------------------
+    |
+    | Base path within the disk for originals, signatures and signed PDFs.
+    |
+    */
+
+    'storage_path' => env('SIGNER_STORAGE_PATH', 'signer'),
 
 ];

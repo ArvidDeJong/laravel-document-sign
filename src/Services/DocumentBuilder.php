@@ -6,6 +6,7 @@ use Darvis\Signer\Enums\DocumentStatus;
 use Darvis\Signer\Models\Customer;
 use Darvis\Signer\Models\Document;
 use Darvis\Signer\Notifications\SignatureRequested;
+use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Support\Facades\Storage;
 use InvalidArgumentException;
 
@@ -21,6 +22,7 @@ class DocumentBuilder
     public function __construct(
         protected string $pdfPath,
         protected AuditLogger $auditLogger,
+        protected SignerConfig $config,
     ) {
         if (! is_file($pdfPath)) {
             throw new InvalidArgumentException("PDF file not found at [{$pdfPath}].");
@@ -96,9 +98,15 @@ class DocumentBuilder
 
     protected function storeOriginal(): string
     {
-        $path = config('signer.storage_path').'/originals/'.uniqid().'.pdf';
+        $path = $this->config->storagePath().'/originals/'.uniqid().'.pdf';
 
-        Storage::disk(config('signer.disk'))->put($path, file_get_contents($this->pdfPath));
+        $contents = file_get_contents($this->pdfPath);
+
+        if ($contents === false) {
+            throw new InvalidArgumentException("PDF file at [{$this->pdfPath}] could not be read.");
+        }
+
+        Storage::disk($this->config->disk())->put($path, $contents);
 
         return $path;
     }

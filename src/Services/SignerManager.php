@@ -2,10 +2,13 @@
 
 namespace Darvis\Signer\Services;
 
+use Darvis\Signer\Support\SignerConfig;
+
 class SignerManager
 {
     public function __construct(
         protected AuditLogger $auditLogger,
+        protected SignerConfig $config,
     ) {}
 
     /**
@@ -13,6 +16,6 @@ class SignerManager
      */
     public function document(string $pdfPath): DocumentBuilder
     {
-        return new DocumentBuilder($pdfPath, $this->auditLogger);
+        return new DocumentBuilder($pdfPath, $this->auditLogger, $this->config);
     }
 }

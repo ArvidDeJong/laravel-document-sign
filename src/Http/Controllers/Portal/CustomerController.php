@@ -56,6 +56,9 @@ class CustomerController extends Controller
             ->with('status', __('Customer deleted.'));
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function validated(Request $request): array
     {
         return $request->validate([

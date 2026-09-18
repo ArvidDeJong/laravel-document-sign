@@ -11,6 +11,8 @@ class AuditLogger
 {
     /**
      * Record an audit trail event for a document.
+     *
+     * @param  array<string, mixed>  $context
      */
     public function log(
         Document $document,
