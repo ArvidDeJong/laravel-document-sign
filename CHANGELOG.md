@@ -4,6 +4,8 @@ All notable changes to `darvis/laravel-document-sign` are documented here. The f
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-21
+
 ### Security
 
 - **An expired signing link kept working for the PDF and for signing.** Only the signing page checked `link_expires_after_hours`; the address that streams the PDF and the one that receives the signature were reachable with the signer's uuid alone, so someone holding an old mail could still read the document and sign it. Both now answer 403 once `link_expires_after_hours` hours have passed since the invitation was last sent, exactly like the expired link itself (`Illuminate\Routing\Exceptions\InvalidSignatureException`). "Last sent" is the newest `invitation_sent` event of that signer in the audit trail, or the moment the signer was created when there is none, so no migration is needed. **What you have to do:** nothing for the normal flow. When you send an invitation again from your own code, record it, or the new link opens the page but the PDF and the submit stay closed:
