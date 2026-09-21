@@ -6,6 +6,7 @@ use Darvis\Signer\Http\Controllers\Portal\CustomerController;
 use Darvis\Signer\Http\Controllers\Portal\DashboardController;
 use Darvis\Signer\Http\Controllers\Portal\DocumentController;
 use Darvis\Signer\Http\Middleware\AuthenticatePortal;
+use Darvis\Signer\SignerServiceProvider;
 use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,9 @@ Route::prefix($config->portalPrefix())
     ->name('signer.portal.')
     ->group(function () {
         Route::get('login', [AuthController::class, 'create'])->name('login');
-        Route::post('login', [AuthController::class, 'store'])->name('login.store');
+        Route::post('login', [AuthController::class, 'store'])
+            ->middleware('throttle:'.SignerServiceProvider::LOGIN_RATE_LIMITER)
+            ->name('login.store');
 
         Route::middleware(AuthenticatePortal::class)->group(function () {
             Route::post('logout', [AuthController::class, 'destroy'])->name('logout');

@@ -21,11 +21,14 @@ class AuditLogger
         ?Request $request = null,
         array $context = [],
     ): AuditEvent {
+        $userAgent = $request?->userAgent();
+
         return $document->auditEvents()->create([
             'signer_id' => $signer?->id,
             'event' => $event,
             'ip_address' => $request?->ip(),
-            'user_agent' => $request?->userAgent(),
+            // The column holds 255 characters; a longer value fails the insert on a strict database.
+            'user_agent' => $userAgent === null ? null : mb_substr($userAgent, 0, 255),
             'context' => $context === [] ? null : $context,
         ]);
     }

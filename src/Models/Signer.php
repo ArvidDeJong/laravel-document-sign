@@ -5,6 +5,7 @@ namespace Darvis\Signer\Models;
 use Darvis\Signer\Enums\SignerStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -62,6 +63,40 @@ class Signer extends Model
     public function document(): BelongsTo
     {
         return $this->belongsTo(Document::class, 'document_id');
+    }
+
+    /**
+     * @return HasMany<AuditEvent, $this>
+     */
+    public function auditEvents(): HasMany
+    {
+        return $this->hasMany(AuditEvent::class, 'signer_id');
+    }
+
+    /**
+     * When the invitation was last sent: the newest `invitation_sent` audit
+     * event of this signer, or the creation date when the trail has none.
+     */
+    public function lastInvitedAt(): ?Carbon
+    {
+        $sentAt = $this->auditEvents()
+            ->where('event', 'invitation_sent')
+            ->latest('created_at')
+            ->latest('id')
+            ->value('created_at');
+
+        return $sentAt instanceof Carbon ? $sentAt : $this->created_at;
+    }
+
+    /**
+     * Whether the signing link is past the given number of hours since the
+     * invitation was last sent.
+     */
+    public function invitationExpired(int $hours): bool
+    {
+        $invitedAt = $this->lastInvitedAt();
+
+        return $invitedAt !== null && $invitedAt->copy()->addHours($hours)->isPast();
     }
 
     public function hasSigned(): bool

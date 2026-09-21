@@ -47,3 +47,28 @@ it('redirects a logged in admin away from the login page', function () {
     $this->get(route('signer.portal.login'))
         ->assertRedirect(route('signer.portal.dashboard'));
 });
+
+it('throttles the login after five attempts in a minute', function () {
+    $this->createAdminUser('super-secret');
+
+    $attempt = fn () => $this->post(route('signer.portal.login.store'), [
+        'email' => 'admin@example.com',
+        'password' => 'wrong-password',
+    ]);
+
+    foreach (range(1, 5) as $try) {
+        $attempt()->assertSessionHasErrors('email');
+    }
+
+    $attempt()->assertTooManyRequests();
+
+    // Another address from the same IP still gets its own attempts.
+    $this->post(route('signer.portal.login.store'), [
+        'email' => 'someone-else@example.com',
+        'password' => 'wrong-password',
+    ])->assertSessionHasErrors('email');
+
+    $this->travel(61)->seconds();
+
+    $attempt()->assertSessionHasErrors('email');
+});

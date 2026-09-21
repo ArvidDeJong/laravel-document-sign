@@ -78,5 +78,8 @@
     "This link expires after :hours hours.": "Deze link verloopt na :hours uur.",
     "Document signed": "Document ondertekend",
     "Thank you, :name!": "Bedankt, :name!",
-    "You signed \":title\" on :date.": "Je hebt \":title\" ondertekend op :date."
+    "You signed \":title\" on :date.": "Je hebt \":title\" ondertekend op :date.",
+    "The signature could not be read. Please draw it again.": "De handtekening kon niet worden gelezen. Teken hem opnieuw.",
+    "Your signature could not be processed. Please try again.": "Je handtekening kon niet worden verwerkt. Probeer het opnieuw.",
+    "This document can no longer be signed.": "Dit document kan niet meer worden ondertekend."
 }

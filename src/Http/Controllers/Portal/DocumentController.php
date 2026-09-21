@@ -5,6 +5,7 @@ namespace Darvis\Signer\Http\Controllers\Portal;
 use Darvis\Signer\Models\Customer;
 use Darvis\Signer\Models\Document;
 use Darvis\Signer\Services\SignerManager;
+use Darvis\Signer\Support\DownloadName;
 use Darvis\Signer\Support\SignerConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -81,7 +82,7 @@ class DocumentController extends Controller
 
         abort_if($path === null, 404);
 
-        return Storage::disk($this->config->disk())->download($path, $document->title.'.pdf');
+        return Storage::disk($this->config->disk())->download($path, DownloadName::forTitle($document->title));
     }
 
     public function destroy(Document $document): RedirectResponse
