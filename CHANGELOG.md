@@ -4,6 +4,11 @@ All notable changes to `darvis/laravel-document-sign` are documented here. The f
 
 ## [Unreleased]
 
+### Added
+
+- Laravel Boost skill `laravel-document-sign-development` in `resources/boost/skills/`: how the signing flow runs, what every failure gives you, checking a PDF before sending, resending an invitation, recovering a document whose stamping failed, the pitfalls in a host app, the settings and how to test the flow without sending mail.
+- Social preview image for the documentation site (`docs/assets/images/social-preview.png`), set as the default Open Graph and Twitter card image.
+
 ## [1.0.0] - 2026-09-18
 
 First public release of the package: a DocuSign like signing flow for PDF documents in Laravel, with mailed invitations, a signing page with a signature canvas, stamping through FPDI, an audit trail and an optional portal.
