@@ -4,6 +4,31 @@ All notable changes to `darvis/laravel-document-sign` are documented here. The f
 
 ## [Unreleased]
 
+### Fixed
+
+Documentation only; nothing in the package changes.
+
+- The installation page said the migrations create four tables and then listed five. They create five: `signer_customers`, `signer_contacts`, `signer_documents`, `signer_signers` and `signer_audit_events`.
+- The signing page said `send()` throws for a PDF path that does not exist. `Signer::document($path)` throws that `InvalidArgumentException` (`PDF file not found at [<path>].`) right away; `send()` throws for a missing signer or an unreadable file.
+- The reason given for the GD extension ("the captured signatures are PNG images", "the package needs the GD extension for it") was not true for the code. `composer.json` requires `ext-gd`, but `src/` calls no GD function: a signature is checked with `getimagesizefromstring()` and placed by FPDF, which reads PNG files with zlib. The docs, the Boost guideline, `CLAUDE.md` and `CONTRIBUTING.md` now say that.
+- The audit trail was described as recording "the IP address and user agent when a request was at hand" for every step. Only `document_signed` stores them; `document_created`, `invitation_sent` and `document_completed` leave both columns empty.
+- "Deleting a document through the portal removes its files" read as if deleting always does. Only the delete button in the portal removes the files; `$document->delete()` in your own code removes the signers and audit events and leaves the files on the disk.
+- "Files never leave the configured disk" was too strong: the stamper copies the original and the signatures to the system temp directory while it works. The text now says the files are stored on the configured disk.
+- The portal page and the home page now say plainly that every user who can log in sees and can delete every customer and document, with a middleware example to restrict it.
+- A signer `page` beyond the last page is skipped without an error and the document completes without that signature. This is now a documented pitfall, with the FPDI check of the page count before sending.
+- The portal route list missed `login.store` and suggested a `customers.show` route that does not exist.
+- The home page and the README no longer say a fresh installation works "after `composer require` and `php artisan migrate`": it also needs a user for the portal and a mailer.
+- README: a `## Requirements` section, the standard section order, links to the documentation site, a section on who can open the portal, and no personal author section.
+
+### Added
+
+- Documentation pages [Quick start](https://arviddejong.github.io/laravel-document-sign/quick-start.html), [Testing](https://arviddejong.github.io/laravel-document-sign/testing.html) and [Troubleshooting](https://arviddejong.github.io/laravel-document-sign/troubleshooting.html), and a "Check that it works" section on the installation page.
+- `tests/DocsSiteTest.php` checks that the pages a beginner needs exist and are linked from the home page, that anchors in links point at an existing heading and that the FAQ stays at six to ten questions.
+
+### Removed
+
+- `docs/README.md`, which duplicated the home page of the documentation site.
+
 ## [1.1.0] - 2026-09-21
 
 ### Security

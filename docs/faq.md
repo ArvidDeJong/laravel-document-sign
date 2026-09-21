@@ -1,7 +1,7 @@
 ---
-title: FAQ
-nav_order: 6
-description: Short answers about signing PDF documents in Laravel with darvis/laravel-document-sign, from signing links and positions to the portal and the audit trail.
+title: "FAQ"
+nav_order: 9
+description: "Short answers about signing PDF documents in Laravel: what the package is, versions, link expiry, positions, storage, the portal, the audit trail and testing."
 faq: true
 ---
 

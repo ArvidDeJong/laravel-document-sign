@@ -33,15 +33,13 @@ function docsFrontMatter(string $file): array
 }
 
 /**
- * Site pages; docs/README.md is only for browsing on GitHub and has no front matter.
+ * Every Markdown file in docs/ is a page of the site.
  *
  * @return array<int, string>
  */
 function docsSitePages(): array
 {
-    $pages = glob(docsSitePath('*.md')) ?: [];
-
-    return array_values(array_filter($pages, fn (string $page) => basename($page) !== 'README.md'));
+    return glob(docsSitePath('*.md')) ?: [];
 }
 
 test('every page has a title, a unique description and a unique nav order', function () {
@@ -58,7 +56,7 @@ test('every page has a title, a unique description and a unique nav order', func
         $navOrders[] = $meta['nav_order'];
     }
 
-    expect(count($pages))->toBeGreaterThanOrEqual(6);
+    expect(count($pages))->toBeGreaterThanOrEqual(9);
     expect(array_unique($descriptions))->toHaveCount(count($pages));
     expect(array_unique($navOrders))->toHaveCount(count($pages));
 });
@@ -156,8 +154,48 @@ test('the config holds the package facts and the sitemap plugin', function () {
         ->toContain('name: darvis/laravel-document-sign')
         ->toContain('company: ARVID.NL')
         ->toContain('url: https://arvid.nl')
-        ->not->toContain('footer_content')
-        ->toMatch('/exclude:\\n  - README\\.md/');
+        ->not->toContain('footer_content');
+});
+
+test('docs has no README that duplicates the site index', function () {
+    expect(docsSitePath('README.md'))->not->toBeFile();
+});
+
+test('the pages a beginner needs exist and are linked from the index', function () {
+    $index = (string) file_get_contents(docsSitePath('index.md'));
+
+    foreach (['installation', 'quick-start', 'signing', 'events-and-audit', 'portal', 'testing', 'troubleshooting', 'faq'] as $page) {
+        expect(docsSitePath($page.'.md'))->toBeFile();
+        expect($index)->toContain(']('.$page.'.md)');
+    }
+
+    expect(file_get_contents(docsSitePath('installation.md')))->toContain('## Check that it works');
+});
+
+test('the FAQ stays at six to ten questions', function () {
+    $count = substr_count((string) file_get_contents(docsSitePath('_data/faq.yml')), '- q: ');
+
+    expect($count)->toBeGreaterThanOrEqual(6)->toBeLessThanOrEqual(10);
+});
+
+test('anchors in links between pages point at a heading that exists', function () {
+    foreach (docsSitePages() as $page) {
+        preg_match_all('/\]\(([a-z-]+\.md)?#([a-z0-9-]+)\)/', (string) file_get_contents($page), $links, PREG_SET_ORDER);
+
+        foreach ($links as $link) {
+            $target = $link[1] === '' ? $page : docsSitePath($link[1]);
+            preg_match_all('/^#{2,4} (.+)$/m', (string) file_get_contents($target), $headings);
+
+            $anchors = array_map(
+                fn (string $heading): string => trim((string) preg_replace('/[^a-z0-9 -]/', '', strtolower($heading))),
+                $headings[1],
+            );
+            $anchors = array_map(fn (string $anchor): string => str_replace(' ', '-', $anchor), $anchors);
+
+            expect(in_array($link[2], $anchors, true))
+                ->toBeTrue(basename($page).' links to #'.$link[2].', which is not a heading in '.basename($target));
+        }
+    }
 });
 
 test('the site says it is not affiliated with DocuSign', function () {
