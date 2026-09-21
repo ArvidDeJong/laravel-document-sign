@@ -7,7 +7,13 @@
   a: It offers a DocuSign like flow inside your own Laravel application, with the documents on your own storage. It is an independent open-source package under the MIT license and not affiliated with DocuSign. It does not provide qualified electronic signatures.
 
 - q: How long does a signing link stay valid?
-  a: For `link_expires_after_hours` hours after it was sent, 72 by default. The link is a temporary signed URL, so an expired or tampered link answers with a 403.
+  a: For `link_expires_after_hours` hours after the invitation was last sent, 72 by default. The link is a temporary signed URL, so an expired or tampered link answers with a 403, and after the expiry the PDF and submitting a signature answer 403 too. Sending the invitation again and recording `invitation_sent` in the audit trail reopens the window.
+
+- q: What happens when stamping the PDF fails?
+  a: Nothing is kept. Signing runs in one database transaction, so the signer stays Pending, the written files are removed, the exception is reported as `Darvis\Signer\Exceptions\SigningFailed` and the signer is asked to try again.
+
+- q: Is the portal login protected against password guessing?
+  a: Yes. The login route is rate limited to five attempts a minute for an email address from one IP address, through the named rate limiter `signer-portal-login`, which a host application can replace.
 
 - q: How do I position a signature on the page?
   a: With `page`, `x` and `y` on `addSigner()`, as percentages of the page measured from the top left, plus an optional `width` in percent of the page width. The same numbers work on any paper size.

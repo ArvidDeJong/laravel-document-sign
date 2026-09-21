@@ -23,11 +23,12 @@ Requires PHP 8.2+ with the GD extension and Laravel 11, 12 or 13.
 ## Features
 
 - **Fluent builder**: `Signer::document($path)->addSigner(…)->send()` stores the PDF, creates the signers and mails the invitations
-- **Signing page** with a signature canvas, reached through a temporary signed link that expires
+- **Signing page** with a signature canvas, reached through a temporary signed link; once it expires the PDF and submitting a signature stop working too
+- **Atomic signing**: the signature is validated as a real PNG, and a failed stamp rolls everything back so the signer can try again
 - **Stamping**: once everyone has signed, every signature is placed on the PDF with FPDI; positions are percentages, so they work on any paper size
 - **Audit trail** of every step with IP address and user agent
 - **Events** `SignerSigned` and `DocumentCompleted` to hook your own follow-up in
-- **Portal** with login, dashboard, customers with contacts and document management, on by default and switchable off
+- **Portal** with a rate limited login, dashboard, customers with contacts and document management, on by default and switchable off
 - **Dutch translation** of the portal and the signing page, and a Laravel Boost guideline and skill for AI tooling in your app
 
 ## Quick example

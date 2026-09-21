@@ -73,6 +73,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Signature size
+    |--------------------------------------------------------------------------
+    |
+    | The largest signature image a signer may submit, in kilobytes of decoded
+    | PNG data. A drawn signature is a few tens of kilobytes; anything above
+    | this limit is refused as a validation error.
+    |
+    */
+
+    'signature_max_kilobytes' => env('SIGNER_SIGNATURE_MAX_KILOBYTES', 512),
+
+    /*
+    |--------------------------------------------------------------------------
     | Storage path
     |--------------------------------------------------------------------------
     |

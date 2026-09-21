@@ -19,6 +19,16 @@ The UI uses Tailwind from a CDN, so there is no build step. Texts are English wi
 
 The portal authenticates against the guard in `signer.portal.guard` (`web` by default), so any user of the host application can log in. There is no role or permission model inside the package: put your own middleware in `signer.portal.middleware` when only some users may reach it.
 
+The login is rate limited to five attempts a minute for an email address from one IP address; the sixth answers 429. The limiter is named `signer-portal-login`. Register a limiter of your own under that name, in a service provider that boots after the package, for another limit:
+
+```php
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+
+RateLimiter::for('signer-portal-login', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+```
+
 Create the first user in your application's `users` table; see [Installation & configuration](installation.md#the-first-portal-user).
 
 ## Routes

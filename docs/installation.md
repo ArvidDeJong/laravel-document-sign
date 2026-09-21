@@ -57,13 +57,14 @@ All keys live in `config/signer.php`, in alphabetical order. Values are read thr
 | --- | --- | --- | --- |
 | `default_signature_width` | | `20.0` | Width of a placed signature in percent of the page width, when `addSigner()` gets no `width`; the height follows the aspect ratio of the drawn signature |
 | `disk` | `SIGNER_DISK` | `local` | Filesystem disk for originals, signature images and signed PDFs |
-| `link_expires_after_hours` | `SIGNER_LINK_EXPIRES_AFTER_HOURS` | `72` | Hours a signing link stays valid after it was sent |
+| `link_expires_after_hours` | `SIGNER_LINK_EXPIRES_AFTER_HOURS` | `72` | Hours a signing link stays valid after the invitation was last sent; after that the signing page, the PDF and submitting a signature all answer 403 |
 | `portal.enabled` | `SIGNER_PORTAL_ENABLED` | `true` | Register the portal routes |
 | `portal.guard` | | `web` | Auth guard the portal logs in against |
 | `portal.middleware` | | `['web']` | Middleware of the portal routes |
 | `portal.prefix` | | `portal` | URL prefix of the portal |
 | `route_middleware` | | `['web']` | Middleware of the signing routes |
 | `route_prefix` | | `sign` | URL prefix of the signing routes |
+| `signature_max_kilobytes` | `SIGNER_SIGNATURE_MAX_KILOBYTES` | `512` | Largest signature image a signer may submit, in kilobytes of decoded PNG data |
 | `storage_path` | `SIGNER_STORAGE_PATH` | `signer` | Base path within the disk; files land in `originals/`, `signatures/` and `signed/` below it |
 
 ## Translations

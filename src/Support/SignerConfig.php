@@ -78,6 +78,14 @@ class SignerConfig
     }
 
     /**
+     * The largest signature image a signer may submit, in kilobytes of decoded PNG data.
+     */
+    public function signatureMaxKilobytes(): int
+    {
+        return (int) $this->config->get('signer.signature_max_kilobytes', 512);
+    }
+
+    /**
      * Base path within the disk for everything the package stores.
      */
     public function storagePath(): string
