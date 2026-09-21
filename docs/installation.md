@@ -69,3 +69,7 @@ All keys live in `config/signer.php`, in alphabetical order. Values are read thr
 ## Translations
 
 The portal and the signing page are English, with a Dutch translation in `lang/nl.json`. Set the application locale to `nl` for a Dutch interface. Texts go through `__()`, so you can add another language with a JSON file of your own in `lang/`.
+
+## Laravel Boost
+
+The package ships [Laravel Boost](https://laravel.com/docs/boost) resources: a guideline and a `laravel-document-sign-development` skill, so an AI assistant in your application knows the signing flow, its failure modes and how to test it. Run `php artisan boost:install`, or `php artisan boost:update --discover` in a project that already uses Boost.

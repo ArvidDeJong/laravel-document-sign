@@ -28,7 +28,7 @@ Requires PHP 8.2+ with the GD extension and Laravel 11, 12 or 13.
 - **Audit trail** of every step with IP address and user agent
 - **Events** `SignerSigned` and `DocumentCompleted` to hook your own follow-up in
 - **Portal** with login, dashboard, customers with contacts and document management, on by default and switchable off
-- **Dutch translation** of the portal and the signing page, and a Laravel Boost guideline for AI tooling in your app
+- **Dutch translation** of the portal and the signing page, and a Laravel Boost guideline and skill for AI tooling in your app
 
 ## Quick example
 
