@@ -214,9 +214,13 @@ it('leaves the signer able to retry when stamping fails', function () {
     $document = hardeningDocument($this);
     $signer = $document->signers->first();
 
-    $this->from(signingUrl($signer))
+    // Built once: the link carries an expiry timestamp, so a second call one second later
+    // gives another URL and the comparison fails.
+    $signingUrl = signingUrl($signer);
+
+    $this->from($signingUrl)
         ->post(route('signer.store', $signer), ['signature' => $this->signatureDataUrl()])
-        ->assertRedirect(signingUrl($signer))
+        ->assertRedirect($signingUrl)
         ->assertSessionHasErrors('signature');
 
     expect($signer->refresh()->status)->toBe(SignerStatus::Pending)
