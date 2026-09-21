@@ -4,6 +4,8 @@ All notable changes to `darvis/laravel-document-sign` are documented here. The f
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-21
+
 ### Fixed
 
 Documentation only; nothing in the package changes.
