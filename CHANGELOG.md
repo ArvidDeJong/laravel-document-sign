@@ -4,6 +4,8 @@ All notable changes to `darvis/laravel-document-sign` are documented here. The f
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-21
+
 ### Added
 
 - Laravel Boost skill `laravel-document-sign-development` in `resources/boost/skills/`: how the signing flow runs, what every failure gives you, checking a PDF before sending, resending an invitation, recovering a document whose stamping failed, the pitfalls in a host app, the settings and how to test the flow without sending mail.
