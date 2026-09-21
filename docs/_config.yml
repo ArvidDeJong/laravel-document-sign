@@ -1,5 +1,5 @@
 title: darvis/laravel-document-sign
-description: Sign PDF documents in Laravel with a DocuSign like flow. Invite signers by mail, capture a drawn signature on a signing page, stamp it on the PDF and keep a full audit trail, with an optional portal.
+description: Sign PDF documents in Laravel with a DocuSign like flow. Invite signers by mail, capture a drawn signature on a signing page, place it on the PDF and keep an audit trail, with an optional portal.
 url: https://arviddejong.github.io
 baseurl: /laravel-document-sign
 
@@ -10,10 +10,6 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
-# docs/README.md is the index for browsing on GitHub; the site has its own index.md.
-exclude:
-  - README.md
-
 # Facts about the package, used by the structured data and llms.txt.
 package:
   name: darvis/laravel-document-sign
@@ -22,7 +18,7 @@ package:
   license_url: https://github.com/ArvidDeJong/laravel-document-sign/blob/main/LICENSE
   requires: PHP 8.2+, Laravel 11, 12 or 13, and the GD extension
   platforms: [Laravel]
-  keywords: [laravel, pdf, signature, e-signature, document signing, docusign alternative, audit trail]
+  keywords: [laravel, pdf, sign pdf, signature, e-signature, electronic signature, document signing, contract signing, docusign alternative, audit trail, fpdi]
 
 # Developer credit in the footer and the structured data.
 developer:

@@ -20,7 +20,7 @@ composer lint      # Pint, check only (composer format fixes)
 composer analyse   # Larastan, level 8
 ```
 
-CI runs the tests on PHP 8.2 to 8.4 with Laravel 11, 12 and 13, on the lowest and the latest dependencies. The tests need the GD extension, like the package itself.
+CI runs the tests on PHP 8.2 to 8.4 with Laravel 11, 12 and 13, on the lowest and the latest dependencies. The tests draw their PNG signatures with the GD extension, which `composer.json` requires anyway.
 
 ## Pull requests
 

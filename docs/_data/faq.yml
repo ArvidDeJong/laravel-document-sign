@@ -1,37 +1,31 @@
 # Questions as people ask them to an assistant. Short, factual answers, checked against the docs.
-# Rendered on faq.md, in the FAQPage structured data and in llms.txt.
+# Rendered on faq.md, in the FAQPage structured data and in llms.txt. Six to ten questions; more dilutes.
 - q: How do I let people sign a PDF in a Laravel application?
-  a: Install `darvis/laravel-document-sign`, run the migrations and call `Signer::document($path)->addSigner($name, $email)->send()`. Every signer gets a mail with a signing link, draws a signature on the signing page, and the package stamps all signatures on the PDF once everyone has signed.
+  a: Install `darvis/laravel-document-sign`, run the migrations and call `Signer::document($path)->addSigner($name, $email)->send()`. Every signer gets a mail with a signing link, draws a signature on the signing page, and the package places all signatures on the PDF once everyone has signed.
 
 - q: Is darvis/laravel-document-sign a DocuSign alternative?
-  a: It offers a DocuSign like flow inside your own Laravel application, with the documents on your own storage. It is an independent open-source package under the MIT license and not affiliated with DocuSign. It does not provide qualified electronic signatures.
+  a: It offers a DocuSign like flow inside your own Laravel application, with the documents on your own storage. It is an independent open-source package under the MIT license, free to use and not affiliated with DocuSign. It places a drawn signature image on the PDF and keeps an audit trail; it does not provide qualified electronic signatures and does not sign the PDF cryptographically.
 
-- q: How long does a signing link stay valid?
-  a: For `link_expires_after_hours` hours after the invitation was last sent, 72 by default. The link is a temporary signed URL, so an expired or tampered link answers with a 403, and after the expiry the PDF and submitting a signature answer 403 too. Sending the invitation again and recording `invitation_sent` in the audit trail reopens the window.
+- q: Which PHP and Laravel versions does darvis/laravel-document-sign support?
+  a: PHP 8.2 or higher with the GD extension, and Laravel 11, 12 and 13. It installs `setasign/fpdf` and `setasign/fpdi` for the PDF work.
 
-- q: What happens when stamping the PDF fails?
-  a: Nothing is kept. Signing runs in one database transaction, so the signer stays Pending, the written files are removed, the exception is reported as `Darvis\Signer\Exceptions\SigningFailed` and the signer is asked to try again.
-
-- q: Is the portal login protected against password guessing?
-  a: Yes. The login route is rate limited to five attempts a minute for an email address from one IP address, through the named rate limiter `signer-portal-login`, which a host application can replace.
+- q: How long does a signing link stay valid, and how do I send it again?
+  a: For `link_expires_after_hours` hours after the invitation was last sent, 72 by default. After that the signing page, the PDF and submitting a signature all answer 403. Notify the signer again with `SignatureRequested` and record an `invitation_sent` audit event to reopen the window.
 
 - q: How do I position a signature on the page?
-  a: With `page`, `x` and `y` on `addSigner()`, as percentages of the page measured from the top left, plus an optional `width` in percent of the page width. The same numbers work on any paper size.
+  a: With `page`, `x` and `y` on `addSigner()`, as percentages of the page measured from the top left, plus an optional `width` in percent of the page width. A `page` beyond the last page is skipped without an error, so check the page count with FPDI before sending.
 
-- q: What happens when the last signer has signed?
-  a: The package stamps every captured signature on the original PDF with FPDI, stores the result as `signed_path` on the configured disk, sets the document status to Completed and dispatches the `DocumentCompleted` event.
+- q: What happens when the last signer has signed, and what if stamping fails?
+  a: The package places every signature on the original PDF with FPDI, stores the result as `signed_path` on the configured disk, sets the document to Completed and dispatches `DocumentCompleted`. Signing runs in one database transaction, so when stamping fails nothing is kept, `SigningFailed` is reported and the signer is asked to try again.
 
 - q: Where are the documents and signatures stored?
-  a: On the filesystem disk from `config/signer.php` (`SIGNER_DISK`, `local` by default) under `storage_path` (`signer`), in the folders `originals`, `signatures` and `signed`.
+  a: On the filesystem disk from `config/signer.php` (`SIGNER_DISK`, `local` by default) under `storage_path` (`signer`), in the folders `originals`, `signatures` and `signed`. The data is in five database tables prefixed `signer_`.
 
-- q: Does the package come with a user interface?
-  a: Yes. A signing page for signers, and an optional portal with login, dashboard, customers and document management under `/portal`. Set `SIGNER_PORTAL_ENABLED=false` to use the signing flow without the portal.
+- q: Who can log in to the portal, and what can they see?
+  a: Any user of the guard in `signer.portal.guard` (`web` by default), and every one of them sees and can delete every customer and document, because the portal has no roles. Restrict it with your own middleware in `signer.portal.middleware`, or turn it off with `SIGNER_PORTAL_ENABLED=false`. The login is limited to five attempts a minute per email address and IP address.
 
-- q: Who can log in to the portal?
-  a: Any user of the host application, authenticated against the guard in `signer.portal.guard` (`web` by default). Create a user in your application's users table to get started.
+- q: Is there an audit trail of who signed?
+  a: Every step is recorded in `signer_audit_events` as `document_created`, `invitation_sent`, `document_signed` and `document_completed`. The `document_signed` event stores the IP address and user agent of the signer.
 
-- q: Is there an audit trail?
-  a: Every step is recorded in `signer_audit_events` with the IP address and user agent where available, as `document_created`, `invitation_sent`, `document_signed` and `document_completed`.
-
-- q: Which PHP and Laravel versions are supported?
-  a: PHP 8.2 or higher with the GD extension, and Laravel 11, 12 and 13.
+- q: How do I test the signing flow without sending mail?
+  a: Use `Storage::fake()` for the configured disk and `Notification::fake()`, build a small PDF with FPDF, call `send()`, and post a PNG data URL to the `signer.store` route. The testing page of the documentation has a complete example.
