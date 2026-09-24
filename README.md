@@ -111,6 +111,10 @@ composer analyse   # Larastan, level 8
 
 See [CHANGELOG.md](CHANGELOG.md).
 
+## Support the package
+
+If darvis/laravel-document-sign saves you time, a star on [GitHub](https://github.com/ArvidDeJong/laravel-document-sign) or a favourite on [Packagist](https://packagist.org/packages/darvis/laravel-document-sign) helps other developers find it.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
